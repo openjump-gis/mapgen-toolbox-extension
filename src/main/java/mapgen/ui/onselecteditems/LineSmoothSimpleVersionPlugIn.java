@@ -91,18 +91,17 @@ public class LineSmoothSimpleVersionPlugIn extends AbstractPlugIn implements Thr
   private int minPoints = 6;
 
   public void initialize(PlugInContext context) throws Exception {
-    FeatureInstaller featureInstaller = new FeatureInstaller(context.getWorkbenchContext());
-    featureInstaller.addMainMenuPlugin(
+    context.getFeatureInstaller().addMainMenuPlugin(
         this,                //exe
         new String[]{MenuNames.PLUGINS, MenuNames.GENERALIZATION, "Not Scale Dependent Algorithms", "Lines"},  //menu path
         "Smooth Selected Lines - Simple Version", //name methode .getName recieved by AbstractPlugIn
         false,      //checkbox
         null,      //icon
-        createEnableCheck(context.getWorkbenchContext())); //enable check
+        getEnableCheck(context)); //enable check
   }
 
-  public static MultiEnableCheck createEnableCheck(WorkbenchContext workbenchContext) {
-    EnableCheckFactory checkFactory = new EnableCheckFactory(workbenchContext);
+  public MultiEnableCheck getEnableCheck(final PlugInContext context) {
+    EnableCheckFactory checkFactory = context.getCheckFactory();
 
     return new MultiEnableCheck()
         .add(checkFactory.createWindowWithLayerNamePanelMustBeActiveCheck())

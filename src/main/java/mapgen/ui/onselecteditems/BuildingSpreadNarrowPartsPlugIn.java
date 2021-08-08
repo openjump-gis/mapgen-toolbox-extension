@@ -92,18 +92,17 @@ public class BuildingSpreadNarrowPartsPlugIn extends AbstractPlugIn implements T
   int iterMax = 50;
 
   public void initialize(PlugInContext context) throws Exception {
-    FeatureInstaller featureInstaller = new FeatureInstaller(context.getWorkbenchContext());
-    featureInstaller.addMainMenuPlugin(
+    context.getFeatureInstaller().addMainMenuPlugin(
         this,                //exe
         new String[]{MenuNames.PLUGINS, MenuNames.GENERALIZATION, "Scale Dependent Algorithms", "Buildings"},  //menu path
         "Spread Narrow Parts of Selected Buildings", //name methode .getName recieved by AbstractPlugIn
-        false,      //checkbox
-        null,      //icon
-        createEnableCheck(context.getWorkbenchContext())); //enable check
+        false,
+        null,
+        getEnableCheck(context));
   }
 
-  public static MultiEnableCheck createEnableCheck(WorkbenchContext workbenchContext) {
-    EnableCheckFactory checkFactory = new EnableCheckFactory(workbenchContext);
+  public MultiEnableCheck getEnableCheck(final PlugInContext context) {
+    EnableCheckFactory checkFactory = context.getCheckFactory();
 
     return new MultiEnableCheck()
         .add(checkFactory.createWindowWithLayerNamePanelMustBeActiveCheck())

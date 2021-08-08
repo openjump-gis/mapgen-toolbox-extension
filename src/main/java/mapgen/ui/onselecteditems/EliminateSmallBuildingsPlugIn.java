@@ -68,18 +68,15 @@ public class EliminateSmallBuildingsPlugIn extends AbstractPlugIn implements Thr
   private FeatureDataset elimFeatures = null;
 
   public void initialize(PlugInContext context) throws Exception {
-    FeatureInstaller featureInstaller = new FeatureInstaller(context.getWorkbenchContext());
-    featureInstaller.addMainMenuPlugin(
-        this,                //exe
+    context.getFeatureInstaller().addMainMenuPlugin(this,
         new String[]{MenuNames.PLUGINS, MenuNames.GENERALIZATION, "Scale Dependent Algorithms", "Buildings"},  //menu path
-        "Eliminate Small Buildings", //name methode .getName recieved by AbstractPlugIn
-        false,      //checkbox
-        null,      //icon
-        createEnableCheck(context.getWorkbenchContext())); //enable check
+        "Eliminate Small Buildings",
+        false,null,
+        getEnableCheck(context));
   }
 
-  public static MultiEnableCheck createEnableCheck(WorkbenchContext workbenchContext) {
-    EnableCheckFactory checkFactory = new EnableCheckFactory(workbenchContext);
+  public MultiEnableCheck getEnableCheck(final PlugInContext context) {
+    EnableCheckFactory checkFactory = context.getCheckFactory();
 
     return new MultiEnableCheck()
         .add(checkFactory.createWindowWithLayerNamePanelMustBeActiveCheck())

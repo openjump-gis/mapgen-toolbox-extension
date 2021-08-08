@@ -69,22 +69,19 @@ public class ChangeElongationSelectedBuildingPlugIn extends AbstractPlugIn imple
     double scale = 1;
 
     public void initialize(PlugInContext context) throws Exception {
-        FeatureInstaller featureInstaller = new FeatureInstaller(context.getWorkbenchContext());
-    	featureInstaller.addMainMenuPlugin(
-    	        this,								//exe
-                new String[] {MenuNames.PLUGINS, MenuNames.GENERALIZATION, "Not Scale Dependent Algorithms" ,"Buildings"}, 	//menu path
-                "Change Elongation of Selected Buildings", //name methode .getName recieved by AbstractPlugIn 
-                false,			//checkbox
-                null,			//icon
-                createEnableCheck(context.getWorkbenchContext())); //enable check        
+        context.getFeatureInstaller().addMainMenuPlugin(this,
+						new String[] {MenuNames.PLUGINS, MenuNames.GENERALIZATION, "Not Scale Dependent Algorithms" ,"Buildings"}, 	//menu path
+						"Change Elongation of Selected Buildings", //name methode .getName recieved by AbstractPlugIn
+						false,null,
+						getEnableCheck(context)); //enable check
     }
     
-    public static MultiEnableCheck createEnableCheck(WorkbenchContext workbenchContext) {
-        EnableCheckFactory checkFactory = new EnableCheckFactory(workbenchContext);
+    public MultiEnableCheck getEnableCheck(final PlugInContext context) {
+        EnableCheckFactory checkFactory = context.getCheckFactory();
 
         return new MultiEnableCheck()
-                        .add(checkFactory.createWindowWithLayerNamePanelMustBeActiveCheck())
-                        .add(checkFactory.createAtLeastNItemsMustBeSelectedCheck(1));
+						.add(checkFactory.createWindowWithLayerNamePanelMustBeActiveCheck())
+            .add(checkFactory.createAtLeastNItemsMustBeSelectedCheck(1));
     }
     
 	public boolean execute(PlugInContext context) throws Exception{

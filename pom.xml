@@ -4,7 +4,7 @@
 
     <groupId>org.openjump</groupId>
     <artifactId>mapgen-toolbox-extension</artifactId>
-    <version>2.0</version>
+    <version>2.1.0</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -16,16 +16,14 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.openjump</groupId>
+            <artifactId>OpenJUMP</artifactId>
+            <version>2.0-main-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.locationtech.jts</groupId>
             <artifactId>jts-core</artifactId>
             <version>${jts.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjump</groupId>
-            <artifactId>OpenJUMP</artifactId>
-            <version>2.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/OpenJUMP-20210412-b68329e.jar</systemPath>
         </dependency>
         <dependency>
             <!-- https://sourceforge.net/projects/jmat/ -->

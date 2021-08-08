@@ -38,7 +38,6 @@ import java.util.Collection;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import javax.swing.JPopupMenu;
 
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
@@ -59,16 +58,15 @@ import com.vividsolutions.jump.workbench.plugin.MultiEnableCheck;
 import com.vividsolutions.jump.workbench.plugin.PlugInContext;
 import com.vividsolutions.jump.workbench.plugin.ThreadedPlugIn;
 import com.vividsolutions.jump.workbench.ui.EditTransaction;
-import com.vividsolutions.jump.workbench.ui.LayerViewPanel;
 import com.vividsolutions.jump.workbench.ui.MenuNames;
 import com.vividsolutions.jump.workbench.ui.MultiInputDialog;
 import com.vividsolutions.jump.workbench.ui.SelectionManagerProxy;
-import com.vividsolutions.jump.workbench.ui.plugin.FeatureInstaller;
+
 
 public class OrthogonalizePlugIn extends AbstractPlugIn implements ThreadedPlugIn{
 
-	private final static String SELECTONLYSUPPORTED = 
-		"Select only Polygons, MultiPolygons, or closed LineStrings";
+	  private final static String SELECTONLYSUPPORTED =
+		    "Select only Polygons, MultiPolygons, or closed LineStrings";
     private final static String NEWLAYER = "Copy to new layer";
     private final static String NEWLAYERHINT = "Modify a copy instead of original.";
     private final static String UNSUPPORTEDGEOMETRY="Skipped unsupported geometry";
@@ -85,24 +83,22 @@ public class OrthogonalizePlugIn extends AbstractPlugIn implements ThreadedPlugI
     private LinearRing[] holes = null;
     private double angleTolerance = 12d; //ortho angle errors > this should not be fixed 
    
-   public void initialize(PlugInContext context) throws Exception
-    {     
-	    WorkbenchContext workbenchContext = context.getWorkbenchContext();
-        FeatureInstaller featureInstaller = new FeatureInstaller(workbenchContext);
-        JPopupMenu popupMenu = LayerViewPanel.popupMenu();
-        /*
-        featureInstaller.addPopupMenuItem(popupMenu,
+    public void initialize(PlugInContext context) throws Exception {
+   		/*
+   		JPopupMenu popupMenu = LayerViewPanel.popupMenu();
+
+      featureInstaller.addPopupMenuItem(popupMenu,
             this, "Orthogonalize",
             false, null,  //to do: add icon
             this.createEnableCheck(workbenchContext));
-         */
-    	featureInstaller.addMainMenuPlugin(
+      */
+    	context.getFeatureInstaller().addMainMenuPlugin(
     	        this,								//exe
                 new String[] {MenuNames.PLUGINS, MenuNames.GENERALIZATION, "Not Scale Dependent Algorithms", "Buildings"}, 	//menu path
                 "Orthogonalize", //name methode .getName recieved by AbstractPlugIn 
                 false,			//checkbox
                 null,			//icon
-                createEnableCheck(context.getWorkbenchContext())); //enable check  
+                getEnableCheck(context)); //enable check
     }
     
     public boolean execute(final PlugInContext context) throws Exception {
@@ -152,24 +148,24 @@ public class OrthogonalizePlugIn extends AbstractPlugIn implements ThreadedPlugI
     	 angleTolerance = dialog.getDouble(ANGLETOLERANCE);
       }
     
-    public MultiEnableCheck createEnableCheck(final WorkbenchContext workbenchContext) {
-        EnableCheckFactory checkFactory = new EnableCheckFactory(workbenchContext);
+    public MultiEnableCheck getEnableCheck(final PlugInContext context) {
+        EnableCheckFactory checkFactory = context.getCheckFactory();
         return new MultiEnableCheck()
             .add(checkFactory.createWindowWithLayerViewPanelMustBeActiveCheck())
             .add(checkFactory.createAtLeastNFeaturesMustHaveSelectedItemsCheck(1))
-            .add(onlySupportedGeometriesMayBeSelectedCheck(workbenchContext));
+            .add(onlySupportedGeometriesMayBeSelectedCheck(context.getWorkbenchContext()));
     }
    
     public EnableCheck onlySupportedGeometriesMayBeSelectedCheck(final WorkbenchContext workbenchContext) {
         return new EnableCheck() {
             public String check(JComponent component) {
-	           Collection selectedItems = ((SelectionManagerProxy) workbenchContext
+	           Collection<Geometry> selectedItems = ((SelectionManagerProxy) workbenchContext
                             .getWorkbench()
                             .getFrame()
                             .getActiveInternalFrame())
                             .getSelectionManager()
                             .getSelectedItems();
-	            Geometry selectedGeo = (Geometry) selectedItems.iterator().next();
+	            Geometry selectedGeo = selectedItems.iterator().next();
 	            selectedGeo = GeoUtils.makeClosedLineStringsPolygons(selectedGeo);
             
                 return    ((selectedGeo instanceof Polygon) 
@@ -239,7 +235,7 @@ public class OrthogonalizePlugIn extends AbstractPlugIn implements ThreadedPlugI
     /**
      * Decomposes Polygons into shell and hole LinearRings for alignment.  Clones and 
      * cleans the rings before aligning them.
-     * @param poly
+     * @param poly a Polygon
      */
     private void alignPoly(Polygon poly) {
         LinearRing shell = GeoUtils.removeRedundantPoints( //does a deep clone first!
@@ -314,11 +310,11 @@ public class OrthogonalizePlugIn extends AbstractPlugIn implements ThreadedPlugI
     	double ry = rotationPoint.y;
     	double cosAngle = Math.cos(angle);
     	double sinAngle = Math.sin(angle);
-    	for (int i=0; i<coords.length; i++) {
-    		double x = coords[i].x - rx;
-    		double y = coords[i].y - ry;
-    		coords[i].x = rx + (x*cosAngle) + (y*sinAngle);
-    		coords[i].y = ry + (y*cosAngle) - (x*sinAngle);
+    	for (Coordinate coord : coords) {
+    		double x = coord.x - rx;
+    		double y = coord.y - ry;
+    		coord.x = rx + (x*cosAngle) + (y*sinAngle);
+    		coord.y = ry + (y*cosAngle) - (x*sinAngle);
     	}
     }
 
@@ -328,7 +324,7 @@ public class OrthogonalizePlugIn extends AbstractPlugIn implements ThreadedPlugI
      * rotating the entire LineString to this side so that the angle is 0.
      * Aligning the other sides is now a simple matter of setting either the 
      * x or y components equal, depending on the calculated tolerance.
-     * @param ring
+     * @param ring the ring to align
      * @return LinearRing after alignment
      */
     public LinearRing alignPolyRing(LineString ring) { //, int anchor)  {

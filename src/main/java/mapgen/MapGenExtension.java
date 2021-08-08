@@ -10,7 +10,6 @@ import mapgen.ui.onselecteditems.EliminatePointsInLineOfBuildingPlugIn;
 import mapgen.ui.onselecteditems.EliminateSmallBuildingsPlugIn;
 import mapgen.ui.onselecteditems.BuildingSpreadNarrowPartsPlugIn;
 import mapgen.ui.onselecteditems.EnlargeBuildingToRectanglePlugIn;
-import mapgen.ui.onselecteditems.LineSimplifyJTS15AlgorithmPlugIn;
 import mapgen.ui.onselecteditems.LineSmoothSimpleVersionPlugIn;
 import mapgen.ui.onselecteditems.MergeSelectedPolygonsPlugIn;
 import mapgen.ui.onselecteditems.SimplifyBuildingToRectanglePlugIn;
@@ -18,7 +17,6 @@ import mapgen.ui.onselecteditems.SimplifyOutlineSelectedBuildingPlugIn;
 import mapgen.ui.onselecteditems.SquareBuildingPlugIn;
 
 import com.isa.jump.plugin.OrthogonalizePlugIn;
-import com.vividsolutions.jump.I18N;
 import com.vividsolutions.jump.workbench.plugin.Extension;
 import com.vividsolutions.jump.workbench.plugin.PlugInContext;
 
@@ -32,10 +30,10 @@ import fr.michaelm.jump.plugin.smooth.BezierSmootherPlugIn;
  *   
  *  Loads several functions useful for map generalization 
  */
+// History
+// 2.1.0 (2021-08-08) : refactoring for changes in OJ i18n and FeatureInstaller
+// 2.0 (2021-05-15) : migration to OpenJUMP 2.0
 public class MapGenExtension extends Extension{
-
-    public final static String SMOOTH = "fr.michaelm.jump.plugin.smooth";
-    public final static String SMOOTHING = I18N.getInstance(SMOOTH).get("smoothing");
     
     public String getName() {
         return "Map Generalization Toolbox (Stefan Steiniger, Michaël Michaud, Michael Bedward, Larry Becker)";

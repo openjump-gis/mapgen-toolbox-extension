@@ -82,18 +82,15 @@ public class DisplaceLinesPlugIn extends AbstractPlugIn implements ThreadedPlugI
 
 
   public void initialize(PlugInContext context) throws Exception {
-    FeatureInstaller featureInstaller = new FeatureInstaller(context.getWorkbenchContext());
-    featureInstaller.addMainMenuPlugin(
-        this,                //exe
+    context.getFeatureInstaller().addMainMenuPlugin(this,
         new String[]{MenuNames.PLUGINS, MenuNames.GENERALIZATION, "Scale Dependent Algorithms", "Lines"},  //menu path
-        "Displace Selected Lines", //name methode .getName recieved by AbstractPlugIn
-        false,      //checkbox
-        null,      //icon
-        createEnableCheck(context.getWorkbenchContext())); //enable check
+        "Displace Selected Lines",
+        false,null,
+        getEnableCheck(context)); //enable check
   }
 
-  public static MultiEnableCheck createEnableCheck(WorkbenchContext workbenchContext) {
-    EnableCheckFactory checkFactory = new EnableCheckFactory(workbenchContext);
+  public MultiEnableCheck getEnableCheck(final PlugInContext context) {
+    EnableCheckFactory checkFactory = context.getCheckFactory();
 
     return new MultiEnableCheck()
         .add(checkFactory.createWindowWithLayerNamePanelMustBeActiveCheck())

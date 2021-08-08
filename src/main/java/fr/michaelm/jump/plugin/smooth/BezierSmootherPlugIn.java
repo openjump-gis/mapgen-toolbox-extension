@@ -28,35 +28,33 @@ import java.util.Collection;
 import java.util.List;
 
 
-import mapgen.MapGenExtension;
-
 import org.openjump.core.ui.plugin.AbstractThreadedUiPlugIn;
 
 public class BezierSmootherPlugIn extends AbstractThreadedUiPlugIn {
-    
-    private final static String SMOOTH = MapGenExtension.SMOOTH;
+
+    private static final I18N i18n = I18N.getInstance("fr.michaelm.jump.plugin.smooth");
 
     // Dialog (dataset)
-    private final static String SMOOTH_LAYER               = I18N.getText(SMOOTH, "smooth-layer");
-    private final static String SMOOTH_SELECTION           = I18N.getText(SMOOTH, "smooth-selection");
-    private final static String LAYER                      = I18N.getText(SMOOTH, "layer");
-    private final static String CREATE_NEW_LAYER           = I18N.getText(SMOOTH, "create-new-layer");
+    private final static String SMOOTH_LAYER               = i18n.get("smooth-layer");
+    private final static String SMOOTH_SELECTION           = i18n.get("smooth-selection");
+    private final static String LAYER                      = i18n.get("layer");
+    private final static String CREATE_NEW_LAYER           = i18n.get("create-new-layer");
     // Dialog (smoothing options)
-    private final static String MIN_SEGMENT_LENGTH         = I18N.getText(SMOOTH, "min-segment-length");
-    private final static String MIN_SEGMENT_LENGTH_TOOLTIP = I18N.getText(SMOOTH, "min-segment-length-tooltip");
-    private final static String NUMBER_OF_POINTS           = I18N.getText(SMOOTH, "number-of-points"); 
-    private final static String NUMBER_OF_POINTS_TOOLTIP   = I18N.getText(SMOOTH, "number-of-points-tooltip");
-    private final static String SMOOTH_FACTOR              = I18N.getText(SMOOTH, "smooth-factor");
-    private final static String SMOOTH_FACTOR_TOOLTIP      = I18N.getText(SMOOTH, "smooth-factor-tooltip");
+    private final static String MIN_SEGMENT_LENGTH         = i18n.get("min-segment-length");
+    private final static String MIN_SEGMENT_LENGTH_TOOLTIP = i18n.get("min-segment-length-tooltip");
+    private final static String NUMBER_OF_POINTS           = i18n.get("number-of-points");
+    private final static String NUMBER_OF_POINTS_TOOLTIP   = i18n.get("number-of-points-tooltip");
+    private final static String SMOOTH_FACTOR              = i18n.get("smooth-factor");
+    private final static String SMOOTH_FACTOR_TOOLTIP      = i18n.get("smooth-factor-tooltip");
     // Dialog (left panel description
-    private final static String PLUGIN_DESCRIPTION         = I18N.getText(SMOOTH, "plugin-description");
+    private final static String PLUGIN_DESCRIPTION         = i18n.get("plugin-description");
     
     // Monitor
-    private final static String SMOOTHING                  = I18N.getText(SMOOTH, "smoothing");
+    private final static String SMOOTHING                  = i18n.get("smoothing");
     
     // Results
-    private final static String SMOOTHED_SELECTION         = I18N.getText(SMOOTH, "smoothed-selection");
-    private final static String SMOOTHED_SUFFIX            = I18N.getText(SMOOTH, "smoothed-suffix");
+    private final static String SMOOTHED_SELECTION         = i18n.get("smoothed-selection");
+    private final static String SMOOTHED_SUFFIX            = i18n.get("smoothed-suffix");
     
     
     private String layerName;
@@ -77,7 +75,7 @@ public class BezierSmootherPlugIn extends AbstractThreadedUiPlugIn {
      * @return the name of this task
      */
     public String getName() {
-        return I18N.getText(SMOOTH, "BezierSmootherPlugIn");
+        return i18n.get("BezierSmootherPlugIn");
     }
 
     public void initialize(PlugInContext context) throws Exception {
@@ -119,7 +117,7 @@ public class BezierSmootherPlugIn extends AbstractThreadedUiPlugIn {
 
     public void run(TaskMonitor monitor, PlugInContext context) throws Exception {
         monitor.allowCancellationRequests();
-        monitor.report(I18N.getText(SMOOTH, SMOOTHING + "..."));
+        monitor.report(i18n.get(SMOOTHING + "..."));
         Collection<Feature> features = new ArrayList<>();
         FeatureSchema schema = new FeatureSchema();
         if (selection) {
@@ -162,9 +160,9 @@ public class BezierSmootherPlugIn extends AbstractThreadedUiPlugIn {
                 dataset.add(newFeature);
                 if (monitor.isCancelRequested()) return;
             }
-            layerName = selection ? 
-                        I18N.getText(SMOOTH, "smoothed-selection") : 
-                        layerName + I18N.getText(SMOOTH, "smoothed-suffix");
+            layerName = selection ?
+                i18n.get("smoothed-selection") :
+                layerName + i18n.get("smoothed-suffix");
             context.addLayer(StandardCategoryNames.RESULT_SUBJECT, layerName, dataset);
         }
     }

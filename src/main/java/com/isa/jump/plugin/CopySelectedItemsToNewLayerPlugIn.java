@@ -46,7 +46,6 @@ import com.vividsolutions.jump.workbench.plugin.EnableCheckFactory;
 import com.vividsolutions.jump.workbench.plugin.MultiEnableCheck;
 import com.vividsolutions.jump.workbench.plugin.PlugInContext;
 import com.vividsolutions.jump.workbench.ui.LayerViewPanel;
-import com.vividsolutions.jump.workbench.ui.plugin.FeatureInstaller;
 import com.vividsolutions.jump.workbench.ui.plugin.clipboard.CopySelectedItemsPlugIn;
 import com.vividsolutions.jump.workbench.model.Layer;
 import com.vividsolutions.jump.workbench.ui.GUIUtil;
@@ -60,12 +59,11 @@ public class CopySelectedItemsToNewLayerPlugIn extends AbstractPlugIn {
     public void initialize(PlugInContext context) throws Exception
     {     
         WorkbenchContext workbenchContext = context.getWorkbenchContext();
-        FeatureInstaller featureInstaller = new FeatureInstaller(workbenchContext);
         JPopupMenu popupMenu = LayerViewPanel.popupMenu();
-        featureInstaller.addPopupMenuPlugin(popupMenu,
+        context.getFeatureInstaller().addPopupMenuPlugin(popupMenu,
             this, "Copy Selected Items To New Layer",
-            false, null,  //to do: add icon
-            this.createEnableCheck(workbenchContext)); 
+            false, null,
+            getEnableCheck(context));
     }
     
     public boolean execute(final PlugInContext context) throws Exception
@@ -108,8 +106,9 @@ public class CopySelectedItemsToNewLayerPlugIn extends AbstractPlugIn {
     public Layer getNewLayer() {
     	return newLayer;
     }
-    public MultiEnableCheck createEnableCheck(final WorkbenchContext workbenchContext) {
-        EnableCheckFactory checkFactory = new EnableCheckFactory(workbenchContext);
+
+    public MultiEnableCheck getEnableCheck(final PlugInContext context) {
+        EnableCheckFactory checkFactory = context.getCheckFactory();
         return new MultiEnableCheck()
             .add(checkFactory.createWindowWithLayerViewPanelMustBeActiveCheck())
             .add(checkFactory.createAtLeastNItemsMustBeSelectedCheck(1));

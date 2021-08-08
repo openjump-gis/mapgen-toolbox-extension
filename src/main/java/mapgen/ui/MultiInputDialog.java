@@ -52,6 +52,9 @@ import java.awt.*;
  *  to type in several values.
  */
 public class MultiInputDialog extends JDialog {
+
+    private static final I18N i18n = I18N.getInstance("fr.michaelm.jump.plugin.smooth");
+
     public EnableCheck createDoubleCheck(final String fieldName) {
         return new EnableCheck() {
             public String check(JComponent component) {
@@ -61,7 +64,7 @@ public class MultiInputDialog extends JDialog {
                 } catch (NumberFormatException e) {
                     return "\""
                         + getText(fieldName).trim()
-                        + "\" "+I18N.get("ui.MultiInputDialog.is-an-invalid-double")+" ("
+                        + "\" "+i18n.get("ui.MultiInputDialog.is-an-invalid-double")+" ("
                         + fieldName
                         + ")";
                 }
@@ -77,7 +80,7 @@ public class MultiInputDialog extends JDialog {
                 } catch (NumberFormatException e) {
                     return "\""
                         + getText(fieldName).trim()
-						+ "\" "+I18N.get("ui.MultiInputDialog.is-an-invalid-integer")+" ("
+						+ "\" "+i18n.get("ui.MultiInputDialog.is-an-invalid-integer")+" ("
                         + fieldName
                         + ")";
                 }
@@ -92,7 +95,7 @@ public class MultiInputDialog extends JDialog {
                 }
                 return "\""
                     + getText(fieldName).trim()
-					+ "\" "+I18N.get("ui.MultiInputDialog.must-be")+" > 0 ("
+					+ "\" "+i18n.get("ui.MultiInputDialog.must-be")+" > 0 ("
                     + fieldName
                     + ")";
             }
@@ -106,7 +109,7 @@ public class MultiInputDialog extends JDialog {
                 }
                 return "\""
                     + getText(fieldName).trim()
-					+ "\" "+I18N.get("ui.MultiInputDialog.must-be")+" >= 0 ("
+					+ "\" "+i18n.get("ui.MultiInputDialog.must-be")+" >= 0 ("
                     + fieldName
                     + ")";
             }
@@ -457,7 +460,7 @@ public class MultiInputDialog extends JDialog {
     //hard to track down. [Jon Aquino]
     void jbInit() throws Exception {
         verticalSeparatorPanel.setBackground(Color.black);
-        imageLabel.setText(I18N.get("ui.MultiInputDialog.images-goes-here"));
+        imageLabel.setText(i18n.get("ui.MultiInputDialog.images-goes-here"));
         descriptionTextArea.setOpaque(false);
         okCancelPanel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -480,7 +483,7 @@ public class MultiInputDialog extends JDialog {
         innerMainPanel2.setLayout(gridBagLayout7);
         descriptionTextArea.setEnabled(false);
         descriptionTextArea.setEditable(false);
-        descriptionTextArea.setText(I18N.get("ui.MultiInputDialog.description-goes-here"));
+        descriptionTextArea.setText(i18n.get("ui.MultiInputDialog.description-goes-here"));
         descriptionTextArea.setLineWrap(true);
         descriptionTextArea.setWrapStyleWord(true);
         strutPanel.setMaximumSize(new Dimension(SIDEBAR_WIDTH, 1));
