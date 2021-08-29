@@ -34,7 +34,7 @@
       <artifactId>jmat</artifactId>
       <version>5.0</version>
       <scope>system</scope>
-      <systemPath>${project.build.directory}/lib/jmat_5.0.jar</systemPath>
+      <systemPath>${project.build.directory}/libs/jmat_5.0.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.github.yannrichet</groupId>
@@ -55,6 +55,10 @@
       <plugin>
         <groupId>com.googlecode.maven-download-plugin</groupId>
         <artifactId>download-maven-plugin</artifactId>
+        <version>1.6.6</version>
+        <configuration>
+          <alwaysVerifyChecksum>true</alwaysVerifyChecksum>
+        </configuration>
         <executions>
           <!-- fetch jmat from sf.net -->
           <execution>
@@ -66,7 +70,73 @@
               <url>https://sourceforge.net/projects/jmat/files/jmat/5.0/jmat_5.0.jar</url>
               <sha1>64e3d669401fa3cdaba62977b770bfe8c651e891</sha1>
               <unpack>false</unpack>
-              <outputDirectory>${project.build.directory}/lib/</outputDirectory>
+              <outputDirectory>${project.build.directory}/libs/</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <!-- fix "not covered by lifecycle configuration" Eclipse issue -->
+            <?m2e execute onConfiguration,onIncremental?>
+            <id>copy-dependencies</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/libs/</outputDirectory>
+              <excludeTransitive>true</excludeTransitive>
+              <includeScope>runtime</includeScope>
+              <excludeArtifactIds>OpenJUMP</excludeArtifactIds>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <appendAssemblyId>false</appendAssemblyId>
+        </configuration>
+        <executions>
+          <execution>
+            <id>distro zip</id>
+            <phase>package</phase>
+            <configuration>
+              <descriptors>
+                <descriptor>distro-zip.xml</descriptor>
+              </descriptors>
+              <attach>false</attach>
+            </configuration>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>net.nicoulaj.maven.plugins</groupId>
+        <artifactId>checksum-maven-plugin</artifactId>
+        <version>1.10</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>files</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <fileSets>
+                <fileSet>
+                  <directory>${project.build.directory}</directory>
+                  <includes>
+                    <include>${project.build.finalName}.zip</include>
+                  </includes>
+                </fileSet>
+              </fileSets>
             </configuration>
           </execution>
         </executions>

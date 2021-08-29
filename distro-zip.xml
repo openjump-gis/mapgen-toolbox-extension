@@ -1,0 +1,28 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">
+  <id>distro zip</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <dependencySets>
+    <dependencySet>
+      <!-- place extension jar in folder root to be parsed by OJ -->
+      <outputDirectory>/</outputDirectory>
+      <useTransitiveFiltering>false</useTransitiveFiltering>
+      <includes>
+        <include>${artifact}</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+   <!-- place deps in a extension lib/ subfolder 
+        using fileset to easily include downloadeded jmat
+        system scope deps are ignored by dependencySet -->
+  <fileSets>
+    <fileSet>
+      <directory>${project.build.directory}/libs/</directory>
+      <outputDirectory>/lib</outputDirectory>
+    </fileSet>
+  </fileSets>
+</assembly>
